@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>وزارة الداخلية - فرع المهام الخاصة في درعا</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root { 
+    --primary-dark:#071710; --primary-main:#0f261a; --military-green:#113220; --military-green-dark:#0a1f14; 
+    --accent-gold:#c5a859; --accent-gold-hover:#d1b872; --bg-body:#0b2216; --bg-card:#ffffff; 
+    --border-light:#d1dcd4; --text-main:#2c3e33; --text-muted:#61796b; --success:#10b981; --success-bg:#d1fae5; 
+    --danger:#ef4444; --danger-bg:#fee2e2; --transition:all 0.3s ease; --main-font:'Tajawal', sans-serif; --title-font:'Amiri', serif;
+}
+body.light-mode {
+    --bg-body: #f4f6f4; --bg-card: #ffffff; --text-main: #2c3e33; --text-muted: #61796b; --border-light: #d1dcd4;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+body { font-family: var(--main-font); background-color: var(--bg-body); background: linear-gradient(135deg, #071710, #113220); background-attachment: fixed; color: var(--text-main); direction: rtl; font-size: 15px; line-height: 1.6; min-height: 100vh; margin: 0; transition: background 0.3s; }
+body.light-mode { background: linear-gradient(135deg, #e2e8f0, #cbd5e1); }
+
+.login-overlay { position: fixed; inset: 0; z-index: 9999; background: rgba(7, 23, 16, 0.9); backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; }
+.login-box { background: rgba(255, 255, 255, 0.98); padding: 40px; border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.5); width: 100%; max-width: 420px; text-align: center; border: 2px solid var(--accent-gold); }
+.login-box img { width: 85px; margin-bottom: 15px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
+.input-control { width: 100%; padding: 12px 16px; border: 1px solid var(--border-light); border-radius: 8px; background: #f8fafc; color: var(--primary-main); font-family: var(--main-font); font-size: 1rem; margin-top: 5px; }
+.input-control:focus { background: #fff; border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(197, 168, 89, 0.2); }
+
+.btn { padding: 12px 24px; border: none; border-radius: 8px; font-family: var(--main-font); font-weight: 700; font-size: 1rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: var(--transition); text-decoration: none; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.btn-primary { background: var(--military-green); color: #fff; } 
+.btn-gold { background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-hover)); color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.1); width: 100%; padding: 14px; font-size: 1.1rem; margin-top: 15px; }
+.btn-secondary { background: #64748b; color: #fff; }
+
+.top-header { background: rgba(7, 23, 16, 0.95); backdrop-filter: blur(12px); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent-gold); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.header-right-side { display: flex; align-items: center; gap: 15px; }
+.header-titles h1 { font-family: var(--title-font); font-size: 1.4rem; color: var(--accent-gold); } 
+.header-titles h2 { font-size: 0.85rem; color: #d1dcd4; font-weight: 500; margin-top: 2px; }
+
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.header-action-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(197,168,89,0.5); background: rgba(255,255,255,0.05); color: #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: var(--transition); font-size: 1rem; }
+.header-action-btn:hover { background: rgba(197,168,89,0.3); transform: scale(1.05); }
+
+.container { max-width: 900px; margin: 30px auto; padding: 0 20px; min-height: 80vh; }
+.card { background: var(--bg-card); border-radius: 16px; padding: 30px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: 1.5px solid var(--border-light); position: relative; overflow: hidden; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--military-green), var(--accent-gold), var(--military-green)); }
+
+.right-side-menu { position: fixed; top: 0; right: 0; width: 320px; height: 100vh; background: var(--bg-card); box-shadow: -10px 0 30px rgba(0,0,0,0.4); z-index: 10001; transform: translateX(100%); transition: transform 0.3s ease; display: flex; flex-direction: column; border-left: 2px solid var(--accent-gold); }
+.right-side-menu.open { transform: translateX(0); }
+.right-menu-header { padding: 25px; background: linear-gradient(135deg, #071710, #113220); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent-gold); color: var(--accent-gold); }
+.right-menu-content { padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.menu-item { background: #f8fafc; border: 1px solid var(--border-light); border-radius: 8px; padding: 15px; cursor: pointer; font-weight: 700; transition: var(--transition); display: flex; align-items: center; gap: 10px; color: var(--primary-main); }
+.menu-item:hover { background: #fff; border-color: var(--accent-gold); color: var(--military-green); }
+#rightMenuOverlay { position: fixed; inset: 0; background: rgba(7, 23, 16, 0.6); backdrop-filter: blur(4px); z-index: 10000; display: none; } 
+#rightMenuOverlay.show { display: block; }
+
+#toastContainer { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 100000; display: flex; flex-direction: column; gap: 10px; }
+.toast { background: rgba(16, 185, 129, 0.95); color: #fff; padding: 14px 28px; border-radius: 10px; font-weight: bold; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+</style>
+</head>
+<body>
+
+<div id="toastContainer"></div>
+
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Emblem_of_Syria_%282025%E2%80%93present%29.svg" alt="الشعار">
+        <h2>فرع المهام الخاصة</h2>
+        <p style="color:var(--text-muted); margin-bottom:15px;">وزارة الداخلية - درعا</p>
+        <form onsubmit="event.preventDefault(); handleLogin();">
+            <div style="text-align:right; margin-bottom:15px;"><label>اسم المستخدم</label><input type="text" id="loginUser" class="input-control" value="قسم التسليح"></div>
+            <div style="text-align:right; margin-bottom:15px;"><label>كلمة المرور</label><input type="password" id="loginPass" class="input-control" value="2026"></div>
+            <button type="submit" class="btn btn-gold">تسجيل الدخول</button>
+        </form>
+    </div>
+</div>
+
+<header class="top-header">
+    <div class="header-right-side">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Emblem_of_Syria_%282025%E2%80%93present%29.svg" style="width:42px; cursor:pointer; filter:drop-shadow(0 2px 5px rgba(197,168,89,0.5));" onclick="toggleRightMenu()" title="القائمة الجانبية (شعار العقاب)">
+        <div class="header-titles"><h1>الجمهورية العربية السورية</h1><h2>وزارة الداخلية - فرع المهام الخاصة في درعا</h2></div>
+    </div>
+    <div class="header-actions">
+        <button class="header-action-btn" onclick="exportToExcel()" title="تصدير السجل لملف Excel"><i class="fa-solid fa-file-excel"></i></button>
+        <button class="header-action-btn" onclick="window.print()" title="طباعة الصفحة"><i class="fa-solid fa-print"></i></button>
+        <button class="header-action-btn" onclick="toggleFullScreen()" title="ملء الشاشة"><i class="fa-solid fa-expand"></i></button>
+        <button class="header-action-btn" onclick="toggleDarkMode()" title="الوضع الليلي / النهاري"><i class="fa-solid fa-moon"></i></button>
+        <button class="header-action-btn" onclick="handleLogout()" title="تسجيل الخروج" style="background:rgba(239,68,68,0.2); color:#fca5a5;"><i class="fa-solid fa-right-from-bracket"></i></button>
+    </div>
+</header>
+
+<div class="container">
+    <div class="card">
+        <h3 style="margin-bottom:25px; border-bottom:1px solid var(--border-light); padding-bottom:15px; color:var(--primary-main);">إصدار لصقة سلاح جديدة مشفرة</h3>
+        <div class="form-group" style="text-align:right; margin-bottom:15px;"><label>الاسم الثلاثي *</label><input type="text" id="fName" class="input-control" placeholder="الاسم الثلاثي للمستلم..."></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+            <div style="text-align:right;"><label>نوع السلاح *</label><input type="text" id="fType" class="input-control" placeholder="مثال: كلاشينكوف"></div>
+            <div style="text-align:right;"><label>عدد المخازن *</label><input type="number" id="fMags" class="input-control" value="4"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+            <div style="text-align:right;"><label>رقم السلاح *</label><input type="text" id="fWpnNum" class="input-control" placeholder="رقم السلاح..."></div>
+            <div style="text-align:right;"><label>رقم الهيكل *</label><input type="text" id="fChassis" class="input-control" placeholder="رقم الشاسيه..."></div>
+        </div>
+        <div class="form-group" style="text-align:right; margin-bottom:25px;"><label>تاريخ الاستلام *</label><input type="date" id="fDate" class="input-control"></div>
+        <button class="btn btn-gold" onclick="createWeaponQR()">توليد وحفظ الـ QR المشفر</button>
+    </div>
+
+    <div id="stickerSection" class="card" style="display:none; text-align:center;">
+        <h3>الملصق المولد</h3>
+        <div id="stickerPrintArea" style="background:#fff; color:#000; padding:15px; border-radius:8px; max-width:280px; margin:15px auto; border:2px solid #000;">
+            <div style="font-weight:900; border-bottom:2px solid #000; padding-bottom:4px; margin-bottom:8px;">فرع المهام الخاصة - التسليح</div>
+            <div id="qrCanvasContainer" style="display:flex; justify-content:center; margin:10px 0;"></div>
+            <div style="font-size:0.85rem; font-weight:800; border-top:1px dashed #000; padding-top:6px;">
+                <div id="stkName" style="font-size:0.9rem; color:#000; font-weight:900;">الاسم الثلاثي</div>
+                <div id="stkType">نوع السلاح</div>
+                <div id="stkNum">SN: ---</div>
+            </div>
+        </div>
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button class="btn btn-primary" onclick="window.print()">طباعة الملصق</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-bottom:15px; border-bottom:1px solid var(--border-light); padding-bottom:15px; color:var(--primary-main);">فحص ومطابقة السلاح (حصراً من داخل التطبيق)</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">ملاحظة أمنية: أي مسح للكود بكاميرا جوال خارجية سيعرض رموزاً مشفرة ولن تظهر أي معلومة.</p>
+        <div id="reader" style="width:100%; max-width:400px; margin:0 auto 15px; border-radius:8px; overflow:hidden; background:#000;"></div>
+        <div style="text-align:center; display:flex; gap:10px; justify-content:center;">
+            <button class="btn btn-primary" onclick="startLiveScanner()">تشغيل الكاميرا الأمنية</button>
+            <button class="btn btn-secondary" onclick="stopLiveScanner()">إيقاف</button>
+        </div>
+        <div id="verifiedResult" style="background:var(--success-bg); color:var(--success); padding:20px; border-radius:12px; margin-top:20px; display:none; border:1px solid var(--success);">
+            <h4 style="color:var(--success); margin-bottom:10px;">✔ عهدة سلاح موثقة ومطابقة</h4>
+            <p><strong>الاسم الثلاثي:</strong> <span id="resName">---</span></p>
+            <p><strong>نوع السلاح:</strong> <span id="resType">---</span></p>
+            <p><strong>رقم السلاح والهيكل:</strong> <span id="resWpnNum">---</span> / <span id="resChassis">---</span></p>
+            <p><strong>المخازن والتاريخ:</strong> <span id="resMags">---</span> مخازن - تاريخ: <span id="resDate">---</span></p>
+        </div>
+        <div id="errorResult" style="background:var(--danger-bg); color:var(--danger); padding:20px; border-radius:12px; margin-top:20px; display:none; border:1px solid var(--danger);">
+            <h4 style="color:var(--danger);">❌ تحذير أمني: كود تالف أو مزور أو غير صادر عن المنظومة!</h4>
+        </div>
+    </div>
+</div>
+
+<div id="rightMenuOverlay" class="modal-overlay" onclick="toggleRightMenu()"></div>
+<div id="rightSideMenu" class="right-side-menu">
+    <div class="right-menu-header">
+        <h3>قوائم قسم التسليح</h3>
+        <button class="btn" style="background:transparent; color:#fff; padding:0;" onclick="toggleRightMenu()">✕</button>
+    </div>
+    <div class="right-menu-content">
+        <div class="menu-item" onclick="window.scrollTo({top:0, behavior:'smooth'}); toggleRightMenu();"><i class="fa-solid fa-qrcode"></i> إصدار لصقة QR جديدة</div>
+        <div class="menu-item" onclick="window.scrollTo({top:500, behavior:'smooth'}); toggleRightMenu();"><i class="fa-solid fa-camera"></i> فحص ومطابقة العهدة</div>
+        <div class="menu-item" onclick="exportToExcel(); toggleRightMenu();"><i class="fa-solid fa-file-excel"></i> تصدير السجل لملف Excel</div>
+        <div class="menu-item" onclick="window.print(); toggleRightMenu();"><i class="fa-solid fa-print"></i> طباعة الصفحة</div>
+        <div class="menu-item" onclick="handleLogout(); toggleRightMenu();" style="color:var(--danger); border-color:rgba(239,68,68,0.3);"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</div>
+    </div>
+</div>
+
+<script>
+let html5QrCode = null;
+const SECRET_KEY = "ARM_SEC_KEY_99";
+const STORAGE_KEY = "ARMORY_LOCAL_DB";
+
+window.onload = function() {
+    document.getElementById('fDate').valueAsDate = new Date();
+    if(localStorage.getItem('active_system_user_siiss_v3')) {
+        document.getElementById('loginOverlay').style.display = 'none';
+    }
+};
+
+function handleLogin() {
+    document.getElementById('loginOverlay').style.display = 'none';
+    localStorage.setItem('active_system_user_siiss_v3', JSON.stringify({Role: 'admin'}));
+    showToast("تم تسجيل الدخول بنجاح");
+}
+function handleLogout() {
+    localStorage.removeItem('active_system_user_siiss_v3');
+    document.getElementById('loginOverlay').style.display = 'flex';
+}
+function toggleRightMenu() {
+    const menu = document.getElementById('rightSideMenu');
+    const overlay = document.getElementById('rightMenuOverlay');
+    menu.classList.toggle('open');
+    overlay.classList.toggle('show');
+}
+function toggleDarkMode() {
+    document.body.classList.toggle('light-mode');
+    showToast(document.body.classList.contains('light-mode') ? "تم تفعيل الوضع النهاري" : "تم تفعيل الوضع الليلي");
+}
+function toggleFullScreen() {
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+    else if(document.exitFullscreen) document.exitFullscreen();
+}
+
+function showToast(msg) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerText = msg;
+    container.appendChild(toast);
+    setTimeout(()=>toast.remove(), 3000);
+}
+
+function encryptPayload(dataObj) {
+    const jsonStr = JSON.stringify(dataObj);
+    const utf8Bytes = encodeURIComponent(jsonStr);
+    let xored = '';
+    for (let i = 0; i < utf8Bytes.length; i++) {
+        const charCode = utf8Bytes.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length);
+        xored += String.fromCharCode(charCode);
+    }
+    return "SEC#" + btoa(xored);
+}
+
+function decryptPayload(cipherText) {
+    try {
+        if (!cipherText || !cipherText.startsWith("SEC#")) return null;
+        const rawBase64 = cipherText.substring(4);
+        const xored = atob(rawBase64);
+        let utf8Bytes = '';
+        for (let i = 0; i < xored.length; i++) {
+            const charCode = xored.charCodeAt(i) ^ SECRET_KEY.charCodeAt(i % SECRET_KEY.length);
+            utf8Bytes += String.fromCharCode(charCode);
+        }
+        return JSON.parse(decodeURIComponent(utf8Bytes));
+    } catch (e) { return null; }
+}
+
+function createWeaponQR() {
+    const name = document.getElementById('fName').value.trim();
+    const type = document.getElementById('fType').value.trim();
+    const mags = document.getElementById('fMags').value.trim();
+    const wpnNum = document.getElementById('fWpnNum').value.trim();
+    const chassis = document.getElementById('fChassis').value.trim();
+    const date = document.getElementById('fDate').value;
+
+    if (!name || !type || !wpnNum || !chassis) return showToast("الرجاء تعبئة الحقول الأساسية!");
+
+    const weaponObj = { n: name, t: type, m: mags, w: wpnNum, c: chassis, d: date };
+    
+    // حفظ السجل تلقائياً في ذاكرة الهاتف (Local Storage)
+    let db = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    db.unshift(weaponObj);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+
+    const encryptedText = encryptPayload(weaponObj);
+
+    const qrBox = document.getElementById('qrCanvasContainer');
+    qrBox.innerHTML = '';
+    new QRCode(qrBox, { text: encryptedText, width: 170, height: 170, colorDark: "#000", colorLight: "#fff" });
+
+    document.getElementById('stkName').textContent = name;
+    document.getElementById('stkType').textContent = type;
+    document.getElementById('stkNum').textContent = `سلاح: ${wpnNum} | هيكل: ${chassis}`;
+    document.getElementById('stickerSection').style.display = 'block';
+    showToast("تم توليد وحفظ الـ QR في الذاكرة المحلية بنجاح");
+}
+
+function exportToExcel() {
+    const db = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    if (db.length === 0) return alert("لا توجد سجلات محفوظة حالياً لتصديرها!");
+
+    let data = db.map(item => ({
+        "الاسم الثلاثي": item.n,
+        "نوع السلاح": item.t,
+        "عدد المخازن": item.m,
+        "رقم السلاح": item.w,
+        "رقم الهيكل": item.c,
+        "تاريخ الاستلام": item.d
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "سجل الأسلحة والعهدة");
+    XLSX.writeFile(wb, `سجل_التسليح_${new Date().toISOString().slice(0,10)}.xlsx`);
+    showToast("تم تصدير ملف الإكسل بنجاح");
+}
+
+function handleScannedText(decodedText) {
+    const data = decryptPayload(decodedText);
+    const verifiedBox = document.getElementById('verifiedResult');
+    const errorBox = document.getElementById('errorResult');
+
+    if (!data) {
+        verifiedBox.style.display = 'none';
+        errorBox.style.display = 'block';
+        showToast("تحذير: كود غير صادر عن المنظومة!");
+        return;
+    }
+
+    errorBox.style.display = 'none';
+    document.getElementById('resName').textContent = data.n;
+    document.getElementById('resType').textContent = data.t;
+    document.getElementById('resWpnNum').textContent = data.w;
+    document.getElementById('resChassis').textContent = data.c;
+    document.getElementById('resMags').textContent = data.m;
+    document.getElementById('resDate').textContent = data.d;
+    verifiedBox.style.display = 'block';
+    stopLiveScanner();
+    showToast("تمت مطابقة السلاح بنجاح");
+}
+
+function startLiveScanner() {
+    if (!html5QrCode) html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 200, height: 200 } }, (decodedText) => {
+        handleScannedText(decodedText);
+    }, () => {}).catch(() => { showToast("تعذر تشغيل الكاميرا"); });
+}
+
+function stopLiveScanner() {
+    if (html5QrCode && html5QrCode.isScanning) html5QrCode.stop().catch(() => {});
+}
+</script>
+</body>
+</html>
